@@ -10,6 +10,8 @@ set more off
 *Require exact variable names rather than abbreviations
 set varabbrev off
 
+cd /nas/longleaf/home/xiaoyanj/ondemand/data/sys/myjobs/projects/default/1/
+
 *Passing inputs
 
 *Job ID
@@ -28,7 +30,7 @@ set seed ${seed}
 
 *read parameters from the csv file
 global row=$count
-import delim /nas/longleaf/home/xiaoyanj/ondemand/data/sys/myjobs/projects/default/1/shape_comb.csv, clear
+import delim shape_comb.csv, clear
 foreach var in p_0 p_1 alpha_2 mu0_0 mu0_1 beta_2 mu1_0 mu1_1 gamma_2 {
     scalar `var' = `var'[$row]
     global `var' = `var'
@@ -40,7 +42,7 @@ tempname results
 
 *Variables in the dataset, and name of the file to save results
 postfile `results' True_ATE ATE_ra ATE_ipw ATE_aipw ATE_ipwra ATE_nnmatch ATE_psmatch ///
-    using /nas/longleaf/home/xiaoyanj/ondemand/data/sys/myjobs/projects/default/1/Temp/results_${count}.dta, replace
+    using Temp/results_${count}.dta, replace
 
 global reps = 1000
 forvalues rep=1/$reps {
@@ -49,7 +51,7 @@ forvalues rep=1/$reps {
 	clear
 
 	*generate data with 500 observations
-	do /nas/longleaf/home/xiaoyanj/ondemand/data/sys/myjobs/projects/default/1/generate_data.do 500
+	do generate_data.do 500
 	
 	* true treatment effect for each individual and take the average
 	su ind_te
